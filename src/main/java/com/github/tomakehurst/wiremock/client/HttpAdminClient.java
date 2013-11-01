@@ -95,6 +95,7 @@ public class HttpAdminClient implements Admin {
 
 	@Override
 	public VerificationResult countRequestsMatching(RequestPattern requestPattern) {
+    System.err.println("Through HttpAdminClient");
 		String body = postJsonAssertOkAndReturnBody(
                 urlFor(GetRequestCountTask.class),
                 Json.write(requestPattern),

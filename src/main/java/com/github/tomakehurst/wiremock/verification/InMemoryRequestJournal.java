@@ -25,6 +25,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import static com.github.tomakehurst.wiremock.common.LocalNotifier.notifier;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.size;
 
@@ -34,6 +35,7 @@ public class InMemoryRequestJournal implements RequestListener, RequestJournal {
 
 	@Override
 	public int countRequestsMatching(RequestPattern requestPattern) {
+    notifier().info("Pool of requests = " + requests.size());
 		return size(filter(requests, matchedBy(requestPattern))); 
 	}
 
@@ -52,6 +54,7 @@ public class InMemoryRequestJournal implements RequestListener, RequestJournal {
 
 	@Override
 	public void requestReceived(Request request, Response response) {
+    notifier().info("Adding a request to journal...");
 		requests.add(LoggedRequest.createFrom(request));
 	}
 

@@ -55,7 +55,7 @@ public class LoggedRequest implements Request {
                          @JsonProperty("absoluteUrl") String absoluteUrl,
                          @JsonProperty("method") RequestMethod method,
                          @JsonProperty("headers") HttpHeaders headers,
-                         @JsonProperty("body") String body,
+                         @JsonProperty("bodyAsString") String body,
                          @JsonProperty("browserProxyRequest") boolean isBrowserProxyRequest,
                          @JsonProperty("loggedDate") Date loggedDate) {
 
@@ -110,7 +110,7 @@ public class LoggedRequest implements Request {
 	}
 
 	@Override
-    @JsonProperty("body")
+    @JsonProperty("bodyAsString")
 	public String getBodyAsString() {
 		return body;
 	}
@@ -130,10 +130,12 @@ public class LoggedRequest implements Request {
 		return isBrowserProxyRequest;
 	}
 
-    public Date getLoggedDate() {
+  @JsonIgnore
+  public Date getLoggedDate() {
         return loggedDate;
     }
 
+    @JsonIgnore
     public String getLoggedDateString() {
         return format(loggedDate);
     }

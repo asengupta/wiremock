@@ -20,11 +20,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.Multimap;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
@@ -59,6 +58,15 @@ public class HttpHeaders {
 
     public static HttpHeaders noHeaders() {
         return new HttpHeaders();
+    }
+
+    public HttpHeaders without(String key) {
+      ArrayList<HttpHeader> httpHeaders = new ArrayList<HttpHeader>();
+      for(Map.Entry<CaseInsensitiveKey, String> x : headers.entries()) {
+        if (x.getKey().key.equals(key)) continue;
+        httpHeaders.add(new HttpHeader(x.getKey().key, x.getValue()));
+      }
+      return new HttpHeaders(httpHeaders);
     }
 
     public HttpHeader getHeader(String key) {
@@ -111,7 +119,10 @@ public class HttpHeaders {
 
         HttpHeaders that = (HttpHeaders) o;
 
-        if (headers != null ? !headers.equals(that.headers) : that.headers != null) return false;
+//        if (headers != null ? !headers.equals(that.headers) : that.headers != null) return false;
+        if (headers != null ?
+            !ImmutableSetMultimap.copyOf(headers).equals(ImmutableSetMultimap.copyOf(that.headers))
+            : that.headers != null) return false;
 
         return true;
     }

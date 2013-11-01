@@ -15,8 +15,13 @@
  */
 package com.github.tomakehurst.wiremock.http;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
+
 import java.util.Set;
 
+@JsonDeserialize(as = LoggedRequest.class)
 public interface Request {
 
 	String getUrl();
@@ -29,6 +34,5 @@ public interface Request {
 	boolean containsHeader(String key);
 	Set<String> getAllHeaderKeys();
 	String getBodyAsString();
-	boolean isBrowserProxyRequest();
-	
+	@JsonIgnore boolean isBrowserProxyRequest();
 }

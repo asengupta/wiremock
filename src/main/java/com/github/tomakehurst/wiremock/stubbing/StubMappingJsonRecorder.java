@@ -20,12 +20,13 @@ import com.github.tomakehurst.wiremock.common.IdGenerator;
 import com.github.tomakehurst.wiremock.common.UniqueFilenameGenerator;
 import com.github.tomakehurst.wiremock.common.VeryShortIdGenerator;
 import com.github.tomakehurst.wiremock.core.Admin;
-import com.github.tomakehurst.wiremock.http.Request;
-import com.github.tomakehurst.wiremock.http.RequestListener;
-import com.github.tomakehurst.wiremock.http.Response;
-import com.github.tomakehurst.wiremock.http.ResponseDefinition;
+import com.github.tomakehurst.wiremock.http.*;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
 import com.github.tomakehurst.wiremock.verification.VerificationResult;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
+import java.util.Collection;
+import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.common.Json.write;
 import static com.github.tomakehurst.wiremock.common.LocalNotifier.notifier;
@@ -46,9 +47,10 @@ public class StubMappingJsonRecorder implements RequestListener {
 
 	@Override
 	public void requestReceived(Request request, Response response) {
-		RequestPattern requestPattern = new RequestPattern(request.getMethod(), request.getUrl());
-		
+		RequestPattern requestPattern = new RequestPattern(request);
+    notifier().info("About to check NOW==============================================");
 		if (requestNotAlreadyReceived(requestPattern) && response.isFromProxy()) {
+//		if (response.isFromProxy()) {
 		    notifier().info(String.format("Recording mappings for %s", request.getUrl()));
 		    writeToMappingAndBodyFile(request, response, requestPattern);
 		} else {
@@ -58,7 +60,8 @@ public class StubMappingJsonRecorder implements RequestListener {
 
     private void writeToMappingAndBodyFile(Request request, Response response, RequestPattern requestPattern) {
         String fileId = idGenerator.generate();
-        String mappingFileName = UniqueFilenameGenerator.generate(request, "mapping", fileId);
+
+      String mappingFileName = UniqueFilenameGenerator.generate(request, "mapping", fileId);
         String bodyFileName = UniqueFilenameGenerator.generate(request, "body", fileId);
         ResponseDefinition responseToWrite = new ResponseDefinition();
         responseToWrite.setStatus(response.getStatus());

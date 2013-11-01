@@ -21,8 +21,12 @@ import com.github.tomakehurst.wiremock.common.FileSource;
 import com.github.tomakehurst.wiremock.common.SingleRootFileSource;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
+import com.github.tomakehurst.wiremock.matching.ValuePattern;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import com.github.tomakehurst.wiremock.stubbing.StubMappings;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.http.RequestMethod.ANY;
 import static java.lang.System.out;
@@ -65,7 +69,7 @@ public class WireMockServerRunner {
 		wireMockServer.loadMappingsUsing(new MappingsLoader() {
 			@Override
 			public void loadMappingsInto(StubMappings stubMappings) {
-				RequestPattern requestPattern = new RequestPattern(ANY);
+        RequestPattern requestPattern = new RequestPattern(ANY);
 				requestPattern.setUrlPattern(".*");
 				ResponseDefinition responseDef = new ResponseDefinition();
 				responseDef.setProxyBaseUrl(baseUrl);
